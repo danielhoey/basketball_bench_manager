@@ -1,19 +1,22 @@
 h1 Players List
 
 #players_list_app
-  p
-    |
-      {{ count }}
-  table
+  table.players
     thead
       tr
         th Name
         th Number
+    tr(v-for="p in players")
+      td= "{{ p.name }}"
+      td= "{{ p.number }}"
     tr.add
       td
-        input(name="name" placeholder="name")
+        input(v-model="newPlayer.name" placeholder="name")
       td
-        input(name="number" placeholder="number" min=0)
+        input(v-model="newPlayer.number" placeholder="number" min=0)
+      td
+        button(@click="save") Save
+
 
 
 javascript:
