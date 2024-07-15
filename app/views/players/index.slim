@@ -1,0 +1,20 @@
+h1 Players List
+
+#players_list_app
+  p
+    |
+      {{ count }}
+  table
+    thead
+      tr
+        th Name
+        th Number
+    tr.add
+      td
+        input(name="name" placeholder="name")
+      td
+        input(name="number" placeholder="number" min=0)
+
+
+javascript:
+  window.onload = () => { vueApps.PlayersList.mount("#players_list_app"); }
