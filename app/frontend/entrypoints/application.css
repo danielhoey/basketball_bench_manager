@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+    h1 { @apply text-2xl;  }
+
+    input { @apply border rounded px-1; }
+    button.primary { @apply border px-1 rounded border-blue-400 border-2 bg-blue-100; }
+
     input.error { @apply border-red-600 border-2; }
     div.error { @apply text-red-600; }
+
 }

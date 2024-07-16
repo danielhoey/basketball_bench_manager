@@ -16,6 +16,9 @@ export default createApp({
             this.players.push(this.newPlayer);
             this.newPlayer = {};
             document.body.querySelector(`.players .add input:first-child`).focus();
+        },
+        has_errors() {
+            return Object.keys(this.errors).length > 0;
         }
     }
 });

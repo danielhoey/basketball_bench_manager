@@ -1,23 +1,27 @@
-h1 Players List
+.mx-auto.py-2.px-4
+  h1 Players List
 
-#players_list_app
-  table.players
-    thead
-      tr
-        th Name
-        th Number
-    tr(v-for="p in players")
-      td= "{{ p.name }}"
-      td= "{{ p.number }}"
-    tr.add
-      td
-        input(v-model="newPlayer.name" placeholder="name")
-      td
-        input(v-model="newPlayer.number" placeholder="number" min=0 :class="{error: errors.number}")
-        div.error(v-if="errors.number")= "{{ errors.number }}"
-      td
-        button(@click="save") Save
+  #players_list_app.py-2
+    table.players.table-auto
+      thead
+        tr.text-left
+          th Name
+          th Number
+      tr(v-for="p in players")
+        td= "{{ p.name }}"
+        td= "{{ p.number }}"
+      tr.add
+        td.px-1
+          input.w-36(v-model="newPlayer.name" placeholder="name")
+        td.px-1
+          input.w-16(v-model="newPlayer.number" placeholder="#" min=0 :class="{error: errors.number}")
+        td
+          button.primary(@click="save") Save
 
+    div.border.border-red-600.text-red-600.my-2.p-1(v-if="has_errors()")
+      strong.fond-bold Error
+      p(v-for="e in errors")
+        span= "{{ e }}"
 
 
 javascript:
