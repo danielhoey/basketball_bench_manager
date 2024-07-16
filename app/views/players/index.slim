@@ -8,17 +8,19 @@
           th Name
           th Number
       tr(v-for="p in players")
-        td= "{{ p.name }}"
-        td= "{{ p.number }}"
+        td
+          input.w-36(v-model="p.name" placeholder="name")
+        td
+          input.w-16(v-model="p.number" placeholder="#" min=0 :class="{error: p.errors.number}")
       tr.add
         td.px-1
           input.w-36(v-model="newPlayer.name" placeholder="name")
         td.px-1
-          input.w-16(v-model="newPlayer.number" placeholder="#" min=0 :class="{error: errors.number}")
+          input.w-16(v-model="newPlayer.number" placeholder="#" min=0 :class="{error: newPlayer.errors.number}")
         td
-          button.primary(@click="save") Save
+          button.primary(@click="add") Add
 
-    div.border.border-red-600.text-red-600.my-2.p-1(v-if="has_errors()")
+    div.border.border-red-600.text-red-600.my-2.p-1(v-if="errors.length>0")
       strong.fond-bold Error
       p(v-for="e in errors")
         span= "{{ e }}"

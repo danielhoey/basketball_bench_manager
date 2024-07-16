@@ -2,23 +2,22 @@ import {createApp} from "vue";
 
 export default createApp({
     data() {
-        return { newPlayer: {}, players: [], errors: {} }
+        return { newPlayer: {errors:{}}, players: [], errors: [] }
     },
     methods: {
-        save(event) {
+        add(event) {
             this.errors = {};
+            this.newPlayer.errors = {};
             const matchingNumber = this.players.find((p) => p.number == this.newPlayer.number);
             if (matchingNumber) {
-                this.errors = {number: "Number already taken"};
+                this.newPlayer.errors = {number:true};
+                this.errors = ["Number already taken"];
                 return;
             }
 
             this.players.push(this.newPlayer);
-            this.newPlayer = {};
+            this.newPlayer = {errors:{}};
             document.body.querySelector(`.players .add input:first-child`).focus();
         },
-        has_errors() {
-            return Object.keys(this.errors).length > 0;
-        }
     }
 });
