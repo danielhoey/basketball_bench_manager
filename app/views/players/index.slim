@@ -13,7 +13,8 @@ h1 Players List
       td
         input(v-model="newPlayer.name" placeholder="name")
       td
-        input(v-model="newPlayer.number" placeholder="number" min=0)
+        input(v-model="newPlayer.number" placeholder="number" min=0 :class="{error: errors.number}")
+        div.error(v-if="errors.number")= "{{ errors.number }}"
       td
         button(@click="save") Save
 
