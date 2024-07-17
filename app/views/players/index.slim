@@ -11,7 +11,7 @@
         td
           input.w-36(v-model="p.name" placeholder="name")
         td
-          input.w-16(v-model="p.number" placeholder="#" min=0 :class="{error: p.errors.number}")
+          input.w-16(v-model="p.number" placeholder="#" @change="checkDuplicate(p)" min=0 :class="{error: p.errors.number}")
       tr.add
         td.px-1
           input.w-36(v-model="newPlayer.name" placeholder="name")
