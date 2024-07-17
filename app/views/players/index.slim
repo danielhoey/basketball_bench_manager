@@ -7,17 +7,19 @@
         tr.text-left
           th Name
           th Number
-      tr(v-for="p in players")
-        td
-          input.w-36(v-model="p.name" placeholder="name")
-        td
-          input.w-16(v-model="p.number" placeholder="#" @change="checkDuplicate(p)" min=0 :class="{error: p.errors.number}")
+      tr(v-for="p in players" :key="p.id")
+        td.px-1
+          input.w-36(v-model="p.name" @change="update(p)" placeholder="name")
+        td.px-1
+          input.w-16(v-model="p.number" placeholder="#" @change="update(p)" min=0 :class="{error: p.errors.number}")
+        td.px-1
+          button.text-red-600(@click="remove(p)") X
       tr.add
         td.px-1
           input.w-36(v-model="newPlayer.name" placeholder="name")
         td.px-1
           input.w-16(v-model="newPlayer.number" placeholder="#" min=0 :class="{error: newPlayer.errors.number}")
-        td
+        td.px-1
           button.primary(@click="add") Add
 
     div.border.border-red-600.text-red-600.my-2.p-1(v-if="errors.length>0")
@@ -27,4 +29,4 @@
 
 
 javascript:
-  window.onload = () => { vueApps.PlayersList.mount("#players_list_app"); }
+  window.onload = () => { vueApps.PlayersList(#{@players.to_json.html_safe}).mount("#players_list_app"); }
