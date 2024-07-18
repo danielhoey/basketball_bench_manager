@@ -1,5 +1,5 @@
 .mx-auto.py-2.px-4
-  h1 Players List
+  h1 Team List
 
   #players_list_app.py-2
     table.players.table-auto
@@ -13,14 +13,14 @@
         td.px-1
           input.w-16(v-model="p.number" placeholder="#" @change="update(p)" min=0 :class="{error: p.errors.number}")
         td.px-1
-          button.text-red-600(@click="remove(p)") X
+          button.svg-icon.px-1.bg-red-500.align-middle.hover:bg-red-600(@click="remove(p)" style="maskImage: url(#{vite_asset_url('images/delete.svg')})")
       tr.add
         td.px-1
           input.w-36(v-model="newPlayer.name" placeholder="name")
         td.px-1
           input.w-16(v-model="newPlayer.number" placeholder="#" min=0 :class="{error: newPlayer.errors.number}")
         td.px-1
-          button.primary(@click="add") Add
+          button.svg-icon.bg-blue-600.align-middle.hover:bg-blue-700(@click="add" style="maskImage: url(#{vite_asset_url('images/add.svg')})")
 
     div.border.border-red-600.text-red-600.my-2.p-1(v-if="errors.length>0")
       strong.fond-bold Error
