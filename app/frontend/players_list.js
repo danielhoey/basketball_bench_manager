@@ -5,13 +5,15 @@ export function PlayersList(player_data)
     player_data.forEach((player)=>{player.errors={}});
     return createApp({
         data() {
-            return {newPlayer: {errors: {}}, players: player_data, errors: []}
+            return {newPlayer: {errors: {}}, players: player_data, errors: [], loading: false}
         },
         methods: {
             async add() {
                 if (this.checkDuplicate(this.newPlayer)) { return; }
 
+                this.loading = true;
                 const response = await fetchJSON("/players", 'POST', this.newPlayer);
+                this.loading = false;
                 if (!response.ok) {
                     alert("Unexpected error, try again.");
                     return;

@@ -9,6 +9,8 @@
     input.error { @apply border-red-600 border-2; }
     div.error { @apply text-red-600; }
 
+    .loading * { cursor: wait; }
+    .loading { opacity: 0.5; }
 
     .svg-icon { mask-size: 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; mask-position: center; width: 24px; height: 24px; }
 }
