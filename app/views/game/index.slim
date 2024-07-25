@@ -1,0 +1,50 @@
+.mx-auto.py-2.px-4
+  h1 Game
+
+  #game_app.py-2
+    .timer
+      h2 Timer
+
+      .clock.mt-1
+        input.w-6.text-center(v-model="minute_tens")
+        input.w-6.text-center(v-model="minute_ones")
+        span
+          | :
+        input.w-6.text-center(v-model="second_tens")
+        input.w-6.text-center(v-model="second_ones")
+
+      .actions.mt-2
+        button.border.p-1.rounded-lg.mr-1.text-white.bg-green-600 Start
+        button.border.p-1.rounded-lg.mr-1.text-white.bg-orange-500 Pause
+        button.border.p-1.rounded-lg.mr-1.text-white.bg-gray-500 Adjust
+
+    .sub.mt-4
+      h2 Substitutions
+      .inline.w-24.border.rounded-lg.p-2.text-gray-700.italic Select
+      img.inline.w-12(src="#{vite_asset_url('images/swap.svg')}")
+      .inline.w-24.border.rounded-lg.p-2.text-gray-700.italic Select
+
+    .on-court.mt-4
+      h2 On Court
+      table.players.table-auto
+        thead
+          tr.text-left
+            th.px-1 Player
+            th.px-1 Minutes
+        tr(v-for="p in players" :key="p.id")
+          td.px-1= "John #8"
+          td.px-1.text-center 0
+
+    .on-bench.mt-4
+      h2 Bench
+      table.players.table-auto
+        thead
+          tr.text-left
+            th.px-1 Player
+            th.px-1.text-center Minutes
+        tr(v-for="p in players" :key="p.id")
+          td.px-1= "Dan #7"
+          td.px-1.text-center 0
+
+javascript:
+//  window.onload = () => { vueApps.GameController(#{@players.to_json.html_safe}).mount("#game_app"); }
