@@ -22,11 +22,11 @@
 
     .substitutions.mt-6
       h2 Substitutions
-      .sub.flex.flex-nowrap.justify-center
+      .sub.flex.flex-nowrap.justify-center.mt-1
         .w-36.border.rounded-lg.p-2.text-blue-700 Matt #13
         img.w-12(src="#{vite_asset_url('images/swap.svg')}")
         .w-36.border.rounded-lg.p-2.text-orange-700 Zander #20
-      .sub.flex.flex-nowrap.justify-center
+      .sub.flex.flex-nowrap.justify-center.mt-1
         .w-36.border.rounded-lg.p-2.text-blue-700.italic Select
         img.w-12(src="#{vite_asset_url('images/swap.svg')}")
         .w-36.border.rounded-lg.p-2.text-orange-700.italic Select
@@ -35,29 +35,33 @@
 
     .on-court.mt-6
       h2.text-blue-700 On Court
-      .border-2.border-blue-700.rounded.mx-auto
+      .border-2.border-blue-700.rounded-lg.mx-auto
         table.players.table-auto.w-full
           thead
             tr
-              th.px-1.text-left Player
+              th.px-2.text-left Player
+              th.px-1.text-left #
               th.px-1.text-center Minutes
-          tr(v-for="p in players" :key="p.id")
-            td.px-1.text-left= "John #8"
+          tr(v-for="p in onCourt" :key="p.id")
+            td.px-2.py-1.text-left= "{{p.name}}"
+            td.px-1.text-left= "{{p.number}}"
             td.px-1.text-center 0
 
     hr.mt-8
 
     .on-bench.mt-6
       h2.text-orange-700 Bench
-      .border-2.border-orange-700.rounded.mx-auto
+      .border-2.border-orange-700.rounded-lg.mx-auto
         table.players.table-auto.w-full
           thead
             tr
-              th.px-1.text-left Player
+              th.px-2.text-left Player
+              th.px-1.text-left #
               th.px-1.text-center Minutes
-          tr(v-for="p in players" :key="p.id")
-            td.px-1.text-left= "Dan #7"
+          tr(v-for="p in bench" :key="p.id")
+            td.px-2.py-1.text-left= "{{p.name}}"
+            td.px-1.text-left= "{{p.number}}"
             td.px-1.text-center 0
 
 javascript:
-//  window.onload = () => { vueApps.GameController(#{@players.to_json.html_safe}).mount("#game_app"); }
+  window.onload = () => { vueApps.GameController(#{@players.to_json.html_safe}).mount("#game_app"); }
