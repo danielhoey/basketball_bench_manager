@@ -4,6 +4,7 @@
 
 @layer base {
     h1 { @apply text-2xl;  }
+    h2 { @apply uppercase; }
 
     input { @apply border rounded px-1; }
     input.error { @apply border-red-600 border-2; }

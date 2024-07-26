@@ -1,50 +1,63 @@
-.mx-auto.py-2.px-4
+.sm:mx-auto.sm:container.text-center.py-2.px-4
   h1 Game
 
   #game_app.py-2
-    .timer
+    .timer.mt-2
       h2 Timer
 
-      .clock.mt-1
-        input.w-6.text-center(v-model="minute_tens")
-        input.w-6.text-center(v-model="minute_ones")
+      .clock.mt-1.text-lg
+        input.w-8.text-center(v-model="minute_tens")
+        input.w-8.text-center(v-model="minute_ones")
         span
           | :
-        input.w-6.text-center(v-model="second_tens")
-        input.w-6.text-center(v-model="second_ones")
+        input.w-8.text-center(v-model="second_tens")
+        input.w-8.text-center(v-model="second_ones")
 
       .actions.mt-2
-        button.border.p-1.rounded-lg.mr-1.text-white.bg-green-600 Start
-        button.border.p-1.rounded-lg.mr-1.text-white.bg-orange-500 Pause
+        button.border.p-1.rounded-lg.mr-1.text-white.bg-blue-600 Start
+        /button.border.p-1.rounded-lg.mr-1.text-white.bg-gray-500 Pause
         button.border.p-1.rounded-lg.mr-1.text-white.bg-gray-500 Adjust
 
-    .sub.mt-4
+    hr.mt-8
+
+    .substitutions.mt-6
       h2 Substitutions
-      .inline.w-24.border.rounded-lg.p-2.text-gray-700.italic Select
-      img.inline.w-12(src="#{vite_asset_url('images/swap.svg')}")
-      .inline.w-24.border.rounded-lg.p-2.text-gray-700.italic Select
+      .sub.flex.flex-nowrap.justify-center
+        .w-36.border.rounded-lg.p-2.text-blue-700 Matt #13
+        img.w-12(src="#{vite_asset_url('images/swap.svg')}")
+        .w-36.border.rounded-lg.p-2.text-orange-700 Zander #20
+      .sub.flex.flex-nowrap.justify-center
+        .w-36.border.rounded-lg.p-2.text-blue-700.italic Select
+        img.w-12(src="#{vite_asset_url('images/swap.svg')}")
+        .w-36.border.rounded-lg.p-2.text-orange-700.italic Select
 
-    .on-court.mt-4
-      h2 On Court
-      table.players.table-auto
-        thead
-          tr.text-left
-            th.px-1 Player
-            th.px-1 Minutes
-        tr(v-for="p in players" :key="p.id")
-          td.px-1= "John #8"
-          td.px-1.text-center 0
+    hr.mt-8
 
-    .on-bench.mt-4
-      h2 Bench
-      table.players.table-auto
-        thead
-          tr.text-left
-            th.px-1 Player
-            th.px-1.text-center Minutes
-        tr(v-for="p in players" :key="p.id")
-          td.px-1= "Dan #7"
-          td.px-1.text-center 0
+    .on-court.mt-6
+      h2.text-blue-700 On Court
+      .border-2.border-blue-700.rounded.mx-auto
+        table.players.table-auto.w-full
+          thead
+            tr
+              th.px-1.text-left Player
+              th.px-1.text-center Minutes
+          tr(v-for="p in players" :key="p.id")
+            td.px-1.text-left= "John #8"
+            td.px-1.text-center 0
+
+    hr.mt-8
+
+    .on-bench.mt-6
+      h2.text-orange-700 Bench
+      .border-2.border-orange-700.rounded.mx-auto
+        table.players.table-auto.w-full
+          thead
+            tr
+              th.px-1.text-left Player
+              th.px-1.text-center Minutes
+          tr(v-for="p in players" :key="p.id")
+            td.px-1.text-left= "Dan #7"
+            td.px-1.text-center 0
 
 javascript:
 //  window.onload = () => { vueApps.GameController(#{@players.to_json.html_safe}).mount("#game_app"); }
