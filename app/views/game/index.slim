@@ -1,4 +1,4 @@
-.sm:mx-auto.sm:container.text-center.py-2.px-4
+.sm:mx-auto.text-center.py-2.px-4.max-w-sm
   h1 Game
 
   #game_app.py-2
@@ -6,26 +6,30 @@
       h2 Timer
 
       .clock.mt-1.text-lg
-        input.w-8.text-center(v-model="minute_tens")
-        input.w-8.text-center(v-model="minute_ones")
+        input.w-8.text-center(v-model="digits[0]")
+        input.w-8.text-center(v-model="digits[1]")
         span
           | :
-        input.w-8.text-center(v-model="second_tens")
-        input.w-8.text-center(v-model="second_ones")
+        input.w-8.text-center(v-model="digits[2]")
+        input.w-8.text-center(v-model="digits[3]")
 
       .actions.mt-2
-        button.border.p-1.rounded-lg.mr-1.text-white.bg-blue-600 Start
-        /button.border.p-1.rounded-lg.mr-1.text-white.bg-gray-500 Pause
-        button.border.p-1.rounded-lg.mr-1.text-white.bg-gray-500 Adjust
+        template(v-if="timeoutID")
+          button.border.p-1.rounded-lg.mr-1.text-white.bg-gray-400(disabled) Start
+          button.border.p-1.rounded-lg.mr-1.text-white.bg-blue-600(@click="pause()") Pause
+        template(v-else)
+          button.border.p-1.rounded-lg.mr-1.text-white.bg-blue-600(@click="start()") Start
+          button.border.p-1.rounded-lg.mr-1.text-white.bg-gray-400(disabled) Pause
+        //button.border.p-1.rounded-lg.mr-1.text-white.bg-gray-500 Adjust
 
     hr.mt-8
 
     .substitutions.mt-6
       h2 Substitutions
-      .sub.flex.flex-nowrap.justify-center.mt-1
-        .w-36.border.rounded-lg.p-2.text-blue-700 Matt #13
+      .sub.flex.flex-nowrap.justify-center.mt-1(v-for="sub in substitutions")
+        .w-36.border.rounded-lg.p-2.text-blue-700= "{{sub[0].name}} \#{{sub[0].number}}"
         img.w-12(src="#{vite_asset_url('images/swap.svg')}")
-        .w-36.border.rounded-lg.p-2.text-orange-700 Zander #20
+        .w-36.border.rounded-lg.p-2.text-orange-700= "{{sub[1].name}} \#{{sub[1].number}}"
       .sub.flex.flex-nowrap.justify-center.mt-1
         .w-36.border.rounded-lg.p-2.text-blue-700.italic Select
         img.w-12(src="#{vite_asset_url('images/swap.svg')}")
@@ -64,4 +68,7 @@
             td.px-1.text-center 0
 
 javascript:
-  window.onload = () => { vueApps.GameController(#{@players.to_json.html_safe}).mount("#game_app"); }
+  window.onload = () => {
+      vueApps.GameController(#{@players.to_json.html_safe}).mount("#game_app");
+      #{Rails.env == 'development' ? 'basketballBenchManagerTests();' : ''}
+  }

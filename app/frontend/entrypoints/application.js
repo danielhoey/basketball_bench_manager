@@ -8,3 +8,8 @@ window.vueApps = {
     'PlayersList': PlayersList,
     'GameController': GameController,
 }
+
+import {GameControllerTests} from '../game_controller';
+window.basketballBenchManagerTests = function() {
+    GameControllerTests(window);
+}
