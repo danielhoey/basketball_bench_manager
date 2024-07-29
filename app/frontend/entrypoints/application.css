@@ -14,4 +14,9 @@
     .loading { opacity: 0.5; }
 
     .svg-icon { mask-size: 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; mask-position: center; width: 24px; height: 24px; }
+
+    #game-controller {
+        .sub .selected { @apply border-2 border-blue-600 rounded; }
+        .players .disabled { @apply text-gray-400 cursor-default; }
+    }
 }

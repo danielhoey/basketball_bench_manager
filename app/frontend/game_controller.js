@@ -5,17 +5,14 @@ export function GameController(playerData)
     return createApp({
         data() {
             return {
-                bench: playerData.slice(0,5),
+                bench: playerData.slice(0, 5),
                 onCourt: playerData.slice(5),
                 absent: [],
-                substitutions: [
-                    [playerData[0], playerData[5]],
-                    [playerData[1], playerData[6]],
-                    [playerData[2], playerData[7]],
-                ],
+                substitutions: [[]],
+                selectedSub: null,
                 gameTimeMs: 0,
                 lastTick: null,
-                digits: [0,0,0,0],
+                digits: [0, 0, 0, 0],
                 timeoutID: null,
             }
         },
@@ -37,9 +34,40 @@ export function GameController(playerData)
                     this.tick();
                 }, 1000)
             },
-            setGameClockDigits() {
-                this.digits = getDigitsFromTime(this.gameTimeMs);
-            }
+            setGameClockDigits() { this.digits = getDigitsFromTime(this.gameTimeMs); },
+
+            selectSubstitution(index) {
+                if (this.isSelectedSub(index)) {
+                    this.selectedSub = null;
+                } else {
+                    this.selectedSub = index;
+                }
+            },
+            isSelectedSub(index){ return this.selectedSub == index; },
+
+            accept() {
+              this.substitutions.push([]);
+            },
+
+            remove() {
+                this.substitutions.splice(this.selectedSub, 1);
+                this.selectedSub = null;
+            },
+
+            assignedToSubstitution(player){
+                return this.substitutions.find(s => s[0] == player || s[1] == player) !== undefined;
+            },
+            selectOnCourt(player){
+                if(this.selectedSub == null) return;
+                if(this.assignedToSubstitution(player)) return;
+                this.substitutions[this.selectedSub][0] = player;
+            },
+
+            selectBench(player){
+                if(this.selectedSub == null) return;
+                if(this.assignedToSubstitution(player)) return;
+                this.substitutions[this.selectedSub][1] = player;
+            },
         },
     });
 }

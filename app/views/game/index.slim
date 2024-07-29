@@ -1,4 +1,4 @@
-.sm:mx-auto.text-center.py-2.px-4.max-w-sm
+#game-controller.mx-auto.text-center.py-2.px-4.max-w-sm
   h1 Game
 
   #game_app.py-2
@@ -26,14 +26,22 @@
 
     .substitutions.mt-6
       h2 Substitutions
-      .sub.flex.flex-nowrap.justify-center.mt-1(v-for="sub in substitutions")
-        .w-36.border.rounded-lg.p-2.text-blue-700= "{{sub[0].name}} \#{{sub[0].number}}"
-        img.w-12(src="#{vite_asset_url('images/swap.svg')}")
-        .w-36.border.rounded-lg.p-2.text-orange-700= "{{sub[1].name}} \#{{sub[1].number}}"
-      .sub.flex.flex-nowrap.justify-center.mt-1
-        .w-36.border.rounded-lg.p-2.text-blue-700.italic Select
-        img.w-12(src="#{vite_asset_url('images/swap.svg')}")
-        .w-36.border.rounded-lg.p-2.text-orange-700.italic Select
+      .sub.cursor-pointer(v-for="(sub,i) in substitutions" @click="selectSubstitution(i)")
+        .mt-1.p-1(:class="{selected: isSelectedSub(i)}")
+          .flex.flex-nowrap.justify-center
+            .w-36.border.rounded-lg.p-2.text-blue-700
+              span(v-if="sub[0]")= "{{sub[0].name}} \#{{sub[0].number}}"
+              span.italic(v-else) Select
+            img.w-12(src="#{vite_asset_url('images/swap.svg')}")
+            .w-36.border.rounded-lg.p-2.text-orange-700
+              span(v-if="sub[1]")= "{{sub[1].name}} \#{{sub[1].number}}"
+              span.italic(v-else) Select
+          .mt-1(v-if="isSelectedSub(i)")
+            button.align-middle
+              .svg-icon.px-1.bg-green-700.align-middle.hover:bg-green-600(@click="accept" style="maskImage: url(#{vite_asset_url('images/check.svg')})")
+            button.align-middle
+              .svg-icon.px-1.bg-red-600.align-middle.hover:bg-red-500(@click.stop="remove" style="maskImage: url(#{vite_asset_url('images/delete.svg')})")
+
 
     hr.mt-8
 
@@ -47,7 +55,7 @@
               th.px-1.text-left #
               th.px-1.text-center Minutes
           tr(v-for="p in onCourt" :key="p.id")
-            td.px-2.py-1.text-left= "{{p.name}}"
+            td.px-2.py-1.text-left.cursor-pointer(@click="selectOnCourt(p)" :class="{disabled: assignedToSubstitution(p)}")= "{{p.name}}"
             td.px-1.text-left= "{{p.number}}"
             td.px-1.text-center 0
 
@@ -63,7 +71,7 @@
               th.px-1.text-left #
               th.px-1.text-center Minutes
           tr(v-for="p in bench" :key="p.id")
-            td.px-2.py-1.text-left= "{{p.name}}"
+            td.px-2.py-1.text-left.cursor-pointer(@click="selectBench(p)" :class="{disabled: assignedToSubstitution(p)}")= "{{p.name}}"
             td.px-1.text-left= "{{p.number}}"
             td.px-1.text-center 0
 

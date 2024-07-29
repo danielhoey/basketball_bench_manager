@@ -15,7 +15,7 @@
             input.w-16(v-model="p.number" placeholder="#" @change="update(p)" min=0 :class="{error: p.errors.number}")
           td.px-1
             button.align-middle(@click="remove(p)")
-              .svg-icon.px-1.bg-red-500.align-middle.hover:bg-red-600(style="maskImage: url(#{vite_asset_url('images/delete.svg')})")
+              .svg-icon.px-1.bg-red-600.align-middle.hover:bg-red-500(style="maskImage: url(#{vite_asset_url('images/delete.svg')})")
         tr.add
           td.px-1
             input.w-36(v-model="newPlayer.name" placeholder="name")
@@ -23,7 +23,7 @@
             input.w-16(v-model="newPlayer.number" placeholder="#" min=0 :class="{error: newPlayer.errors.number}")
           td.px-1
             button.align-middle(@click="add")
-              .svg-icon.bg-blue-600.hover:bg-blue-700(style="maskImage: url(#{vite_asset_url('images/add.svg')})")
+              .svg-icon.bg-blue-700.hover:bg-blue-600(style="maskImage: url(#{vite_asset_url('images/add.svg')})")
 
       div.border.border-red-600.text-red-600.my-2.p-1(v-if="errors.length>0")
         strong.fond-bold Error
