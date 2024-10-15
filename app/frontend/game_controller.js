@@ -5,8 +5,8 @@ export function GameController(playerData)
     return createApp({
         data() {
             return {
-                bench: playerData.slice(0, 5),
-                onCourt: playerData.slice(5),
+                bench: playerData,
+                onCourt: [],
                 absent: [],
                 substitutions: [[]],
                 selectedSub: null,
@@ -57,13 +57,26 @@ export function GameController(playerData)
             assignedToSubstitution(player){
                 return this.substitutions.find(s => s[0] == player || s[1] == player) !== undefined;
             },
+
             selectOnCourt(player){
+                if (this.timeoutID == null) {
+                    this.bench.push(player);
+                    this.onCourt = this.onCourt.filter(p => p != player);
+                    return
+                }
+
                 if(this.selectedSub == null) return;
                 if(this.assignedToSubstitution(player)) return;
                 this.substitutions[this.selectedSub][0] = player;
             },
 
             selectBench(player){
+                if (this.timeoutID == null && this.onCourt.length < 5) {
+                    this.onCourt.push(player);
+                    this.bench = this.bench.filter(p => p != player);
+                    return
+                }
+
                 if(this.selectedSub == null) return;
                 if(this.assignedToSubstitution(player)) return;
                 this.substitutions[this.selectedSub][1] = player;
