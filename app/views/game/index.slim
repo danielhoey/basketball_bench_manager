@@ -46,18 +46,18 @@
     hr.mt-8
 
     .on-court.mt-6
-      h2.text-blue-700 On Court
+      h2.text-blue-700 Court
       .border-2.border-blue-700.rounded-lg.mx-auto
         table.players.table-auto.w-full
           thead
             tr
               th.px-2.text-left Player
               th.px-1.text-left #
-              th.px-1.text-center Minutes
-          tr(v-for="p in onCourt" :key="p.id")
+              th.px-1.text-center Bench Mins
+          tr(v-for="p in court" :key="p.id")
             td.px-2.py-1.text-left.cursor-pointer(@click="selectOnCourt(p)" :class="{disabled: assignedToSubstitution(p)}")= "{{p.name}}"
             td.px-1.text-left= "{{p.number}}"
-            td.px-1.text-center 0
+            td.px-1.text-center= "{{formatTime(p.benchTime)}}"
 
     hr.mt-8
 
@@ -69,11 +69,11 @@
             tr
               th.px-2.text-left Player
               th.px-1.text-left #
-              th.px-1.text-center Minutes
+              th.px-1.text-center Bench Mins
           tr(v-for="p in bench" :key="p.id")
-            td.px-2.py-1.text-left.cursor-pointer(@click="selectBench(p)" :class="{disabled: assignedToSubstitution(p)}")= "{{p.name}}"
+            td.px-2.py-1.text-left.cursor-pointer(@click="selectOnBench(p)" :class="{disabled: assignedToSubstitution(p)}")= "{{p.name}}"
             td.px-1.text-left= "{{p.number}}"
-            td.px-1.text-center 0
+            td.px-1.text-center= "{{formatTime(p.benchTime)}}"
 
 javascript:
   window.onload = () => {

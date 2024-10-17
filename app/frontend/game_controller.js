@@ -2,11 +2,13 @@ import {createApp} from "vue";
 
 export function GameController(playerData)
 {
+    for (let player of playerData) { player.benchTime = 0; }
+
     return createApp({
         data() {
             return {
                 bench: playerData,
-                onCourt: [],
+                court: [],
                 absent: [],
                 substitutions: [[]],
                 selectedSub: null,
@@ -28,7 +30,9 @@ export function GameController(playerData)
             tick() {
                 this.timeoutID = setTimeout(() => {
                     let now = Date.now();
-                    this.gameTimeMs += (now - this.lastTick);
+                    const tickMs = (now - this.lastTick);
+                    this.gameTimeMs += tickMs
+                    for (let p of this.bench) { p.benchTime += tickMs; }
                     this.setGameClockDigits();
                     this.lastTick = now;
                     this.tick();
@@ -46,7 +50,7 @@ export function GameController(playerData)
             isSelectedSub(index){ return this.selectedSub == index; },
 
             accept() {
-              this.substitutions.push([]);
+                if (this.substitutions.length < this.bench.length) { this.substitutions.push([]); }
             },
 
             remove() {
@@ -61,7 +65,7 @@ export function GameController(playerData)
             selectOnCourt(player){
                 if (this.timeoutID == null) {
                     this.bench.push(player);
-                    this.onCourt = this.onCourt.filter(p => p != player);
+                    this.court = this.court.filter(p => p != player);
                     return
                 }
 
@@ -70,9 +74,9 @@ export function GameController(playerData)
                 this.substitutions[this.selectedSub][0] = player;
             },
 
-            selectBench(player){
-                if (this.timeoutID == null && this.onCourt.length < 5) {
-                    this.onCourt.push(player);
+            selectOnBench(player){
+                if (this.timeoutID == null && this.court.length < 5) {
+                    this.court.push(player);
                     this.bench = this.bench.filter(p => p != player);
                     return
                 }
@@ -81,6 +85,7 @@ export function GameController(playerData)
                 if(this.assignedToSubstitution(player)) return;
                 this.substitutions[this.selectedSub][1] = player;
             },
+            formatTime(timeMs) { return formatToHalfMinutes(timeMs); },
         },
     });
 }
@@ -96,6 +101,10 @@ function getDigitsFromTime(timeMs) {
     return [tenMinutes,minutes,tenSeconds,seconds];
 }
 
+function formatToHalfMinutes(timeMs) {
+    return Math.floor(timeMs / 30000) / 2;
+}
+
 export function GameControllerTests(window) {
     let failed = false;
 
@@ -106,6 +115,13 @@ export function GameControllerTests(window) {
     assert(getDigitsFromTime(61000), [0,1,0,1]);
     assert(getDigitsFromTime(72000), [0,1,1,2]);
     assert(getDigitsFromTime(600000), [1,0,0,0]);
+
+    assert(formatToHalfMinutes(0), 0);
+    assert(formatToHalfMinutes(29000), 0);
+    assert(formatToHalfMinutes(30000), 0.5);
+    assert(formatToHalfMinutes(60000), 1);
+    assert(formatToHalfMinutes(90000), 1.5);
+    assert(formatToHalfMinutes(120000), 2);
 
     function assert(actual, expected) {
         if (JSON.stringify(actual) !== JSON.stringify(expected)) {
