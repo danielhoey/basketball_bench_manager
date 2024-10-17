@@ -22,6 +22,7 @@ export function GameController(playerData)
         methods: {
             start() {
                 this.lastTick = Date.now();
+                this.sortPlayers();
                 this.tick();
             },
             pause() {
@@ -50,12 +51,36 @@ export function GameController(playerData)
             },
             isSelectedSub(index){ return this.selectedSub == index; },
 
+            hasAnySubstitutions() {
+                for (let s of this.substitutions) {
+                    if (s.length == 2) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+
+            applySubstitutions() {
+                for (let s of this.substitutions) {
+                    if (s.length == 2) {
+                        const court_i = this.court.indexOf(s[0]);
+                        const bench_i = this.bench.indexOf(s[1]);
+                        this.court[court_i] = s[1];
+                        this.bench[bench_i] = s[0];
+                    }
+                }
+                this.substitutions = [[]];
+                sortPlayers();
+            },
+
             accept() {
                 if (this.substitutions.length < this.bench.length) { this.substitutions.push([]); }
             },
 
             remove() {
-                this.substitutions.splice(this.selectedSub, 1);
+                if (this.substitutions[this.selectedSub].length > 0) {
+                    this.substitutions[this.selectedSub] = [];
+                }
                 this.selectedSub = null;
             },
 
@@ -91,6 +116,11 @@ export function GameController(playerData)
                 if(this.selectedSub == null) return;
                 if(this.assignedToSubstitution(player)) return;
                 this.substitutions[this.selectedSub][1] = player;
+            },
+
+            sortPlayers() {
+                this.court.sort((a,b) => b.benchTime - a.benchTime);
+                this.bench.sort((a,b) => b.benchTime - a.benchTime);
             },
 
             toggleUnavailable() {

@@ -41,7 +41,8 @@
               .svg-icon.px-1.bg-green-700.align-middle.hover:bg-green-600(@click="accept" style="maskImage: url(#{vite_asset_url('images/check.svg')})")
             button.align-middle
               .svg-icon.px-1.bg-red-600.align-middle.hover:bg-red-500(@click.stop="remove" style="maskImage: url(#{vite_asset_url('images/delete.svg')})")
-
+      .mt-2(v-if="hasAnySubstitutions() && selectedSub == null")
+        button.border.p-1.rounded-lg.mr-1.text-white.bg-blue-600(@click="applySubstitutions") Execute
 
     hr.mt-8
 
