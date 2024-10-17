@@ -74,6 +74,26 @@
             td.px-2.py-1.text-left.cursor-pointer(@click="selectOnBench(p)" :class="{disabled: assignedToSubstitution(p)}")= "{{p.name}}"
             td.px-1.text-left= "{{p.number}}"
             td.px-1.text-center= "{{formatTime(p.benchTime)}}"
+          tr(v-if="selectingUnavailable")
+            td.px-2.py-1.text-gray-700.italic(colspan="3") Select unavailable players
+
+    .unavailable.mt-6
+      h2.text-gray-700 Unavailable
+      .border-2.border-gray-700.rounded-lg.mx-auto
+        table.players.table-auto.w-full
+          thead
+            tr
+              th.px-2.text-left Player
+              th.px-1.text-left #
+              th.px-1.text-center Bench Mins
+          tr(v-for="p in unavailable" :key="p.id")
+            td.px-2.py-1.text-left.cursor-pointer(@click="addToBench(p)" :class="{disabled: assignedToSubstitution(p)}")= "{{p.name}}"
+            td.px-1.text-left= "{{p.number}}"
+            td.px-1.text-center= "{{formatTime(p.benchTime)}}"
+          tr
+            td.px-2.py-1.cursor-pointer(@click="toggleUnavailable()" colspan="3")
+              button.border.p-1.rounded-lg.mr-1.text-white.bg-gray-400= "{{ selectingUnavailable ? 'Finish' : 'Select' }}"
+
 
 javascript:
   window.onload = () => {

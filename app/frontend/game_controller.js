@@ -9,7 +9,8 @@ export function GameController(playerData)
             return {
                 bench: playerData,
                 court: [],
-                absent: [],
+                unavailable: [],
+                selectingUnavailable: false,
                 substitutions: [[]],
                 selectedSub: null,
                 gameTimeMs: 0,
@@ -75,6 +76,12 @@ export function GameController(playerData)
             },
 
             selectOnBench(player){
+                if(this.selectingUnavailable) {
+                    this.unavailable.push(player);
+                    this.bench = this.bench.filter(p => p != player);
+                    return;
+                }
+
                 if (this.timeoutID == null && this.court.length < 5) {
                     this.court.push(player);
                     this.bench = this.bench.filter(p => p != player);
@@ -85,6 +92,16 @@ export function GameController(playerData)
                 if(this.assignedToSubstitution(player)) return;
                 this.substitutions[this.selectedSub][1] = player;
             },
+
+            toggleUnavailable() {
+                this.selectingUnavailable = !this.selectingUnavailable;
+            },
+
+            addToBench(player) {
+                this.unavailable = this.unavailable.filter(p => p != player);
+                this.bench.push(player);
+            },
+
             formatTime(timeMs) { return formatToHalfMinutes(timeMs); },
         },
     });
