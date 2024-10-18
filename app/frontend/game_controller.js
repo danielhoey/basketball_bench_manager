@@ -1,28 +1,53 @@
 import {createApp} from "vue";
 
-export function GameController(gameID, playerData)
+export function GameController(gameID, playerData, playerTimes, lastSnapshot)
 {
-    for (let player of playerData) { player.benchTime = 0; }
+    let bench = []
+    let court = []
+    let unavailable = []
+    let gameTimeMs = 0;
+    let lastTick = null;
+
+    if (lastSnapshot == null) {
+        for (let player of playerData) { player.benchTime = 0; }
+        bench = playerData;
+    } else {
+        for (let player of playerData) {
+            if (!playerTimes[player.id]) {
+                player.benchTime = 0;
+                unavailable.push(player);
+                continue;
+            }
+            player.benchTime = playerTimes[player.id]['bench']*1000 || 0;
+            if (playerTimes[player.id]['last_position'] == 'bench') {
+                bench.push(player);
+            } else {
+                court.push(player);
+            }
+        }
+        gameTimeMs = lastSnapshot.game_time * 1000;
+        lastTick = new Date(lastSnapshot.real_time);
+    }
 
     return createApp({
         data() {
             return {
-                bench: playerData,
-                court: [],
-                unavailable: [],
+                bench: bench,
+                court: court,
+                unavailable: unavailable,
                 selectingUnavailable: false,
                 substitutions: [[]],
                 selectedSub: null,
-                gameTimeMs: 0,
-                lastTick: null,
-                digits: [0, 0, 0, 0],
+                gameTimeMs: gameTimeMs,
+                lastTick: lastTick,
+                digits: getDigitsFromTime(gameTimeMs),
                 timeoutID: null,
             }
         },
         methods: {
             start() {
                 this.saveSnapshot();
-                this.lastTick = Date.now();
+                if (this.lastTick == null) { this.lastTick = Date.now(); }
                 this.sortPlayers();
                 this.tick();
             },

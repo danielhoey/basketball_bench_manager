@@ -98,6 +98,6 @@
 
 javascript:
   window.onload = () => {
-      vueApps.GameController(#{@game.id}, #{@players.to_json.html_safe}).mount("#game_app");
+      vueApps.GameController(#{@game.id}, #{@players.to_json.html_safe}, #{@player_times.to_json.html_safe}, #{@last_snapshot.to_json.html_safe}).mount("#game_app");
       #{Rails.env == 'development' ? 'basketballBenchManagerTests();' : ''}
   }
