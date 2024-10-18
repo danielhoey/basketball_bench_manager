@@ -1,6 +1,6 @@
 import {createApp} from "vue";
 
-export function GameController(playerData)
+export function GameController(gameID, playerData)
 {
     for (let player of playerData) { player.benchTime = 0; }
 
@@ -21,6 +21,7 @@ export function GameController(playerData)
         },
         methods: {
             start() {
+                this.saveSnapshot();
                 this.lastTick = Date.now();
                 this.sortPlayers();
                 this.tick();
@@ -70,7 +71,8 @@ export function GameController(playerData)
                     }
                 }
                 this.substitutions = [[]];
-                sortPlayers();
+                this.sortPlayers();
+                this.saveSnapshot();
             },
 
             accept() {
@@ -130,6 +132,33 @@ export function GameController(playerData)
             addToBench(player) {
                 this.unavailable = this.unavailable.filter(p => p != player);
                 this.bench.push(player);
+            },
+
+            async saveSnapshot() {
+                const csrfToken = document.head.querySelector("meta[name=csrf-token]")?.content;
+
+                const data = { positions: {court: this.court.map(p => p.id), bench: this.bench.map(p => p.id)},
+                               game_time: Math.floor(this.gameTimeMs/1000),
+                               real_time: new Date().toISOString() }
+
+                try {
+                    const response = await fetch(`/games/${gameID}/snapshot`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': csrfToken,
+                        },
+                        body: JSON.stringify(data),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    console.log('Snapshot saved successfully');
+                } catch (error) {
+                    console.error('Error saving snapshot:', error);
+                }
             },
 
             formatTime(timeMs) { return formatToHalfMinutes(timeMs); },
