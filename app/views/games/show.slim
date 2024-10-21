@@ -2,6 +2,8 @@
   h1 Game - #{@game.created_at.strftime('%d %b %y')}
 
   #game_app.py-2
+    .error.text-red-700.text-center.mt-2(v-if="error") {{ error }}
+
     .timer.mt-2
       h2 Timer
 

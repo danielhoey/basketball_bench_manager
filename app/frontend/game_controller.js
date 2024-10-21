@@ -160,14 +160,25 @@ export function GameController(gameID, playerData, playerTimes, lastSnapshot)
             },
 
             async saveSnapshot() {
-                const csrfToken = document.head.querySelector("meta[name=csrf-token]")?.content;
-
                 const data = { positions: {court: this.court.map(p => p.id), bench: this.bench.map(p => p.id)},
                                game_time: Math.floor(this.gameTimeMs/1000),
                                real_time: new Date().toISOString() }
 
+                await this.postData(`/games/${gameID}/snapshot`, data);
+            },
+
+            async postData(url, data) {
+                const csrfToken = document.head.querySelector("meta[name=csrf-token]")?.content;
+
+                let vue = this;
+                function handleError(details) {
+                    console.error('Error saving snapshot:', details);
+                    vue.error = 'Failed to sync with server';
+                    setTimeout(() => { vue.postData(url, data); }, 1000);
+                }
+
                 try {
-                    const response = await fetch(`/games/${gameID}/snapshot`, {
+                    const response = await fetch(url, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -176,13 +187,11 @@ export function GameController(gameID, playerData, playerTimes, lastSnapshot)
                         body: JSON.stringify(data),
                     });
 
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
+                    if (!response.ok) { handleError(response); }
+                    else { this.error = null; }
 
-                    console.log('Snapshot saved successfully');
                 } catch (error) {
-                    console.error('Error saving snapshot:', error);
+                    handleError(error);
                 }
             },
 
