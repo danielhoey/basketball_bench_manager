@@ -52,6 +52,8 @@ export function GameController(gameID, playerData, playerTimes, lastSnapshot)
                 this.tick();
             },
             pause() {
+                this.saveSnapshot();
+                this.lastTick = null;
                 clearTimeout(this.timeoutID);
                 this.timeoutID = null;
             },
