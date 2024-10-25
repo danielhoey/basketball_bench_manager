@@ -1,4 +1,3 @@
-require_relative '../operations/create_snapshot'
 
 class GamesController < ApplicationController
   def index
@@ -18,7 +17,7 @@ class GamesController < ApplicationController
   end
 
   def snapshot
-    cs = Operations::CreateSnapshot.new(params.slice(:game_id, :positions, :game_time, :real_time))
+    cs = CreateSnapshot.new(params.slice(:game_id, :positions, :game_time, :real_time))
     if cs.execute
       render json: { status: 'success' }, status: :ok
     else
