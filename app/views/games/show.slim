@@ -15,7 +15,7 @@
         input.w-8.text-center(v-model="digits[2]")
         input.w-8.text-center(v-model="digits[3]")
 
-      .actions.mt-2
+      .actions.mt-2.text-lg
         template(v-if="timeoutID")
           button.border.p-1.rounded-lg.mr-1.text-white.bg-gray-400(disabled) Start
           button.border.p-1.rounded-lg.mr-1.text-white.bg-blue-600(@click="pause()") Pause
