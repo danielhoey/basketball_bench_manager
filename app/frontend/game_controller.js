@@ -32,6 +32,7 @@ export function GameController(gameID, playerData, playerTimes, lastSnapshot)
     return createApp({
         data() {
             return {
+                players: playerData,
                 bench: bench,
                 court: court,
                 unavailable: unavailable,

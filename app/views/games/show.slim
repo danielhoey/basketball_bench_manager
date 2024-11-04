@@ -49,6 +49,24 @@
     hr.mt-8
 
     .on-court.mt-6
+      h2 Players
+      .border-2.rounded-lg.mx-auto
+        table.players.table-auto.w-full
+          thead
+            tr
+              th.px-2.text-left Court
+              th.px-1.text-center Mins
+              th.px-2.text-right Bench
+          tr(v-for="p in players" :key="p.id")
+            td.px-2.py-1.text-left.cursor-pointer
+              span(v-if="court.includes(p)")= "{{p.name}}"
+            td.px-1.text-center= "{{formatTime(p.benchTime)}}"
+            td.px-2.py-1.text-right.cursor-pointer
+              span(v-if="!court.includes(p)")= "{{p.name}}"
+
+    hr.mt-8
+
+    .on-court.mt-6
       h2.text-blue-700 Court
       .border-2.border-blue-700.rounded-lg.mx-auto
         table.players.table-auto.w-full

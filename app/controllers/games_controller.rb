@@ -16,6 +16,13 @@ class GamesController < ApplicationController
     @last_snapshot = Snapshot.where(game_id: @game.id).order(:real_time).select('game_time', 'real_time').last
   end
 
+  def timeline
+    @game = Game.find(params[:id])
+    @players = Player.select(:id, :name, :number).all
+    @player_times = Snapshot.summarise_player_times(@game.id)
+    @last_snapshot = Snapshot.where(game_id: @game.id).order(:real_time).select('game_time', 'real_time').last
+  end
+
   def snapshot
     cs = CreateSnapshot.new(params.slice(:game_id, :positions, :game_time, :real_time))
     if cs.execute

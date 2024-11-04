@@ -9,4 +9,5 @@ Rails.application.routes.draw do
   resources "players"
   resources "games"
   post "games/:game_id/snapshot" => "games#snapshot"
+  get "games/:id/timeline" => "games#timeline"
 end
