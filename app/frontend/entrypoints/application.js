@@ -3,10 +3,12 @@ console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify
 
 import {PlayersList} from '../players_list';
 import {GameController} from '../game_controller';
+import {Timeline} from '../timeline';
 
 window.vueApps = {
     'PlayersList': PlayersList,
     'GameController': GameController,
+    'Timeline': Timeline,
 }
 
 import {GameControllerTests} from '../game_controller';

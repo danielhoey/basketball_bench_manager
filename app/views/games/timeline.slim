@@ -1,42 +1,44 @@
-.timeline.mx-auto.max-w-2xl.py-4.px-6
-  h1 Game Timeline
+#timeline.mx-auto.text-center.py-2.px-4.max-w-sm
+  h1 Game - #{@game.created_at.strftime('%d %b %y')}
 
-  .events.mt-4.space-y-4.flex-col
-    .event.flex.items-center
-      .time.w-24.text-gray-600.text-sm.pt-1 00:00
-      .details.flex-1
-        .bg-blue-50.rounded-lg.p-3.ml-2
-          .text-blue-700 Game Start
-    .event.flex.items-center
-      .time.w-24.text-gray-600.text-sm.pt-1 02:45
-      .details.flex-1
-        .bg-green-50.rounded-lg.p-3
-          .text-green-700
-            | Substitution:
-            .flex.items-center.gap-2.mt-1
-              .player.text-blue-700 John Smith #12
-              .player.text-orange-700 Mike Jones #23
+  #app.py-2
+    .error.text-red-700.text-center.mt-2(v-if="error") {{ error }}
 
-    .event.flex.items-center
-      .time.w-24.text-gray-600.text-sm.pt-1 10:00
-      .details.flex-1
-        .bg-yellow-50.rounded-lg.p-3
-          .text-yellow-700 Timeout Called
+    .events.mt-4.flex-col(v-for="e in events")
+      .event.flex.items-center
+        .time.w-24.text-gray-600.text-sm.pt-1= "{{ e.time }}"
+        .details.flex-1
+          .border.border-blue-700.rounded-lg.p-2.ml-2.text-blue-700(v-if="e.start") Game Start
+          .border.border-green-700.rounded-lg.p-3.ml-2(v-if="e.substitution")
+            .text-green-700 Substitution
+            .columns-2.mt-2
+              .flex.flex-col.gap-2
+                .player.text-blue-700(v-for="p in e.substitution.players_in")= "{{ p.name }}"
+              .flex.flex-col.gap-2
+                .player.text-orange-700(v-for="p in e.substitution.players_out")= "{{ p.name }}"
+          .border-t.border-purple-700.ml-2.p-1.text-purple-700(v-if="e.timeout") Timeout
+          .border-b.border-purple-700.ml-2.p-1.text-purple-700(v-if="e.restart") &nbsp;
+          .border.border-red-700.rounded-lg.p-3.ml-2.text-red-700(v-if="e.end") Game End
 
-    .event.flex.items-center
-      .time.w-24.text-gray-600.text-sm.pt-1 20:00
-      .details.flex-1
-        .bg-purple-50.rounded-lg.p-3
-          .text-purple-700 Half Time
-
-    .event.flex.items-center
-      .time.w-24.text-gray-600.text-sm.pt-1 25:15
-      .details.flex-1
-        .bg-green-50.rounded-lg.p-3
-          .text-green-700
-            | Substitution:
-            .flex.items-center.gap-2.mt-1
-              .player.text-blue-700 Sarah Wilson #34
-              .player.text-orange-700 Lisa Brown #45
+    .actions.mt-4.flex.justify-center
+      .time.w-24.text-gray-600.text-sm.pt-1= "{{ time }}"
+      .flex.justify-center(v-if="!started")
+        button.border.p-1.rounded-lg.mr-1.text-blue-700 Start Game
+      .flex.justify-center.gap-2(v-if="started")
+        button.block.border.p-1.rounded-lg.mr-1.text-white.bg-green-700 Substitution
+        button.block.border.p-1.rounded-lg.mr-1.text-white.bg-purple-700 Timeout
 
 
+javascript:
+  window.onload = () => {
+    const events = [
+      {time: '20:00', start: true},
+      {time: '17:15', substitution: {players_in: [{name: 'Cormac'},{name: 'Luca'}], players_out: [{name: 'John'},{name: 'Jane'}]}},
+      {time: '15:00', timeout: true},
+      {time: '14:00', restart: true},
+      {time: '14:01', substitution: {players_in: [{name: 'Zander'},{name: 'Flynn'},{name: 'Leroy'}, {name: 'Dylan'}, {name: 'Kieran'}],
+                                     players_out: [{name: 'Cormac'},{name: 'Luca'}, {name: 'Zac'}, {name: 'Ian'}, {name: 'Eoghan'}]}}
+    ]
+    vueApps.Timeline(#{@game.id}, #{@players.to_json.html_safe}, events).mount("#app");
+    #{Rails.env == 'development' ? 'basketballBenchManagerTests();' : ''}
+  }
