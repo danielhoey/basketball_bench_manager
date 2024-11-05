@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer base {
+    html { font-size: 18px;}
     h1 { @apply text-2xl;  }
     h2 { @apply uppercase; }
 
@@ -18,5 +19,9 @@
     #game-controller {
         .sub .selected { @apply border-2 border-blue-600 rounded; }
         .players .disabled { @apply text-gray-400 cursor-default; }
+    }
+
+    #timeline {
+        .disabled { @apply text-gray-400 cursor-default; }
     }
 }

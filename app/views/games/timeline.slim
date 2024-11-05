@@ -6,18 +6,13 @@
 
     .events.mt-4.flex-col(v-for="e in events")
       .event.flex.items-center
-        .time.w-24.text-gray-600.text-sm.pt-1= "{{ e.time }}"
+        .time.w-16.text-left.text-gray-600.text-sm.pt-1= "{{ e.time }}"
         .details.flex-1
           .border.border-blue-700.rounded-lg.p-2.ml-2.text-blue-700(v-if="e.start") Game Start
           .border.border-green-700.rounded-lg.p-3.ml-2(v-if="e.substitution")
-            .text-green-700 Substitution
-            .columns-2.mt-2
-              .flex.flex-col.gap-2
-                .player.text-blue-700(v-for="p in e.substitution.players_in")= "{{ p.name }}"
-              .flex.flex-col.gap-2
-                .player.text-orange-700(v-for="p in e.substitution.players_out")= "{{ p.name }}"
-          .border-t.border-purple-700.ml-2.p-1.text-purple-700(v-if="e.timeout") Timeout
-          .border-b.border-purple-700.ml-2.p-1.text-purple-700(v-if="e.restart") &nbsp;
+            = render 'substitution', {variable: "e.substitution"}
+          .border-t.border-purple-700.ml-2.p-1.text-purple-700(v-if="e.timeout") Timeout start
+          .border-b.border-purple-700.ml-2.p-1.text-purple-700(v-if="e.restart") Timeout end
           .border.border-red-700.rounded-lg.p-3.ml-2.text-red-700(v-if="e.end") Game End
 
     .actions.mt-4.flex.justify-center
@@ -28,16 +23,58 @@
         button.block.border.p-1.rounded-lg.mr-1.text-white.bg-green-700 Substitution
         button.block.border.p-1.rounded-lg.mr-1.text-white.bg-purple-700 Timeout
 
+    .substitution.mt-4.border.border-green-700.rounded-lg.p-2.ml-2
+      = render 'substitution', {variable: "current_substitution"}
+      .on-court.mt-6
+        h2.text-blue-700 Court
+        .border.border-blue-700.rounded-lg.mx-auto
+          table.players.table-auto.w-full
+            thead
+              tr
+                th.px-2.text-left Player
+                th.px-1.text-center Bench Mins
+            tr(v-for="p in court" :key="p.id")
+              td.px-2.py-1.text-left.cursor-pointer(@click="selectOnCourt(p)" :class="{disabled: isSelected(p)}")= "{{p.name}}"
+              td.px-1.text-center= "{{formatTime(p.benchTime)}}"
+
+      .on-bench.mt-6
+        h2.text-orange-700 Bench
+        .border.border-orange-700.rounded-lg.mx-auto
+          table.players.table-auto.w-full
+            thead
+              tr
+                th.px-2.text-left Player
+                th.px-1.text-center Bench Mins
+            tr(v-for="p in bench" :key="p.id")
+              td.px-2.py-1.text-left.cursor-pointer(@click="selectOnBench(p)" :class="{disabled: isSelected(p)}")= "{{p.name}}"
+              td.px-1.text-center= "{{formatTime(p.benchTime)}}"
+            tr(v-if="selectingUnavailable")
+              td.px-2.py-1.text-gray-700.italic(colspan="3") Select unavailable players
+
+      .unavailable.mt-6
+        h2.text-gray-700 Unavailable
+        .border.border-gray-700.rounded-lg.mx-auto
+          table.players.table-auto.w-full
+            thead
+              tr
+                th.px-2.text-left Player
+                th.px-1.text-center Bench Mins
+            tr(v-for="p in unavailable" :key="p.id")
+              td.px-2.py-1.text-left.cursor-pointer(@click="addToBench(p)")= "{{p.name}}"
+              td.px-1.text-center= "{{formatTime(p.benchTime)}}"
+            tr
+              td.px-2.py-1.cursor-pointer(@click="toggleUnavailable()" colspan="3")
+                button.border.p-1.rounded-lg.mr-1.text-white.bg-gray-400= "{{ selectingUnavailable ? 'Finish' : 'Select' }}"
 
 javascript:
   window.onload = () => {
     const events = [
       {time: '20:00', start: true},
-      {time: '17:15', substitution: {players_in: [{name: 'Cormac'},{name: 'Luca'}], players_out: [{name: 'John'},{name: 'Jane'}]}},
+      {time: '17:15', substitution: {in: [{name: 'Cormac'},{name: 'Luca'}], out: [{name: 'John'},{name: 'Jane'}]}},
       {time: '15:00', timeout: true},
       {time: '14:00', restart: true},
-      {time: '14:01', substitution: {players_in: [{name: 'Zander'},{name: 'Flynn'},{name: 'Leroy'}, {name: 'Dylan'}, {name: 'Kieran'}],
-                                     players_out: [{name: 'Cormac'},{name: 'Luca'}, {name: 'Zac'}, {name: 'Ian'}, {name: 'Eoghan'}]}}
+      {time: '14:01', substitution: {in: [{name: 'Zander'},{name: 'Flynn'},{name: 'Leroy'}, {name: 'Dylan'}, {name: 'Kieran'}],
+                                     out: [{name: 'Cormac'},{name: 'Luca'}, {name: 'Zac'}, {name: 'Ian'}, {name: 'Eoghan'}]}}
     ]
     vueApps.Timeline(#{@game.id}, #{@players.to_json.html_safe}, events).mount("#app");
     #{Rails.env == 'development' ? 'basketballBenchManagerTests();' : ''}
