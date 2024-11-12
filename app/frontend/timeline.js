@@ -8,6 +8,7 @@ const Substitution = {
 const SubstitutionSelector = {
     props: ['substitution'],
     template: '#substitution-selector',
+    emits: ['cancel', 'submit'],
     data() {
         return {
             court: this.substitution.court,
@@ -20,7 +21,7 @@ const SubstitutionSelector = {
         selectOnCourt(player) {
             let out = this.substitution.out;
             if (out.includes(player)) {
-                out.splice(out.indexOf(player), 0);
+                out.splice(out.indexOf(player), 1);
             } else {
                 out.push(player);
             }
@@ -28,7 +29,7 @@ const SubstitutionSelector = {
         selectOnBench(player) {
             let i = this.substitution.in;
             if (i.includes(player)) {
-                i.splice(i.indexOf(player), 0);
+                i.splice(i.indexOf(player), 1);
             } else {
                 i.push(player);
             }
@@ -37,6 +38,11 @@ const SubstitutionSelector = {
         isSelected(player) {
             let s = this.substitution;
             return s.in.includes(player) || s.out.includes(player);
+        },
+        valid() {
+            let s = this.substitution;
+            console.log(s.in.length, s.out.length);
+            return (s.in.length == s.out.length) && (s.in.length > 0);
         },
         formatTime(timeMs) { return Math.floor(timeMs / 30000) / 2; },
     },

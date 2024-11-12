@@ -22,6 +22,6 @@
     }
 
     #timeline {
-        .disabled { @apply text-gray-400 cursor-default; }
+        .selected { @apply text-gray-400 }
     }
 }
