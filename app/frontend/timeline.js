@@ -5,9 +5,49 @@ const Substitution = {
     template: '#substitution',
 }
 
+const SubstitutionSelector = {
+    props: ['substitution'],
+    template: '#substitution-selector',
+    data() {
+        return {
+            court: this.substitution.court,
+            bench: this.substitution.bench,
+            unavailable: this.substitution.unavailable,
+            selectingUnavailable: false,
+        }
+    },
+    methods: {
+        selectOnCourt(player) {
+            let out = this.substitution.out;
+            if (out.includes(player)) {
+                out.splice(out.indexOf(player), 0);
+            } else {
+                out.push(player);
+            }
+        },
+        selectOnBench(player) {
+            let i = this.substitution.in;
+            if (i.includes(player)) {
+                i.splice(i.indexOf(player), 0);
+            } else {
+                i.push(player);
+            }
+        },
+
+        isSelected(player) {
+            let s = this.substitution;
+            return s.in.includes(player) || s.out.includes(player);
+        },
+        formatTime(timeMs) { return Math.floor(timeMs / 30000) / 2; },
+    },
+    components: {
+        Substitution,
+    },
+}
+
+
 export function Timeline(gameID, playerData, events)
 {
-
     return createApp({
         data() {
             return {
@@ -15,35 +55,17 @@ export function Timeline(gameID, playerData, events)
                 court: playerData.slice(0,5),
                 bench: playerData.slice(5),
                 started: true,
-                current_substitution: {in: [], out: []},
+                substitution_being_edited: null
             }
         },
         methods: {
-            selectOnCourt(player) {
-                let out = this.current_substitution.out;
-                if (out.includes(player)) {
-                    out.splice(out.indexOf(player), 1);
-                } else {
-                    out.push(player);
-                }
+            createSubstitution() {
+                this.substitution_being_edited = {in: [], out: [], court: this.court, bench: this.bench};
             },
-            selectOnBench(player) {
-                let i = this.current_substitution.in;
-                if (i.includes(player)) {
-                    i.splice(i.indexOf(player), 1);
-                } else {
-                    i.push(player);
-                }
-            },
-
-            isSelected(player) {
-                let cs = this.current_substitution;
-                return cs.in.includes(player) || cs.out.includes(player);
-            },
-            formatTime(timeMs) { return Math.floor(timeMs / 30000) / 2; },
         },
         components: {
             Substitution,
+            SubstitutionSelector,
         },
     })
 }
